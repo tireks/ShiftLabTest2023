@@ -1,14 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.ShiftLabTest2023.NoActionBar"
     tools:context=".screen.RegistrationScreenFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/light_contrast_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white" />
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_button_card"
+        android:padding="@dimen/standart_margin"
+        >
+
+        <TextView
+            android:id="@+id/main_label"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Registration:"
+            android:textSize="32sp"
+            android:textStyle="bold|italic"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <!--<TextView
+            android:id="@+id/name_label"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/standart_small_margin"
+            app:layout_constraintTop_toBottomOf="@+id/main_label"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="20sp"
+            android:text="Enter your name:"
+            />-->
+
+        <!--<EditText
+            style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/light_contrast_color"
+            app:layout_constraintTop_toBottomOf="@+id/name_label"
+            tools:layout_editor_absoluteX="16dp" />-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/name_palette"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/main_label"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+            <ImageView
+                android:id="@+id/name_pic"
+                app:layout_constraintTop_toTopOf="@+id/name_edit_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/baseline_person_outline_24"
+                style="@style/palettePic_standart_style" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_edit_layout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/name_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Name:"
+                style="@style/editLayout_standart_style">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/name_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/surname_edit_layout"
+                style="@style/editLayout_standart_style"
+                app:layout_constraintTop_toBottomOf="@id/name_edit_layout"
+                app:layout_constraintStart_toEndOf="@+id/name_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Surname:"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/surname_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/name_alert"
+                app:layout_constraintTop_toBottomOf="@id/surname_edit_layout"
+                app:layout_constraintStart_toStartOf="@id/surname_edit_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Name and Surname must contain \nonly more then two letters"
+                style="@style/alertText_standart_style" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/birthdate_palette"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/name_palette"
+            app:layout_constraintStart_toStartOf="parent"
+
+            >
+
+            <ImageView
+                android:id="@+id/birthdate_pic"
+                style="@style/palettePic_standart_style"
+                app:layout_constraintTop_toTopOf="@+id/birthdate_edit_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/baseline_edit_calendar_24"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/birthdate_edit_layout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/birthdate_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Birthdate:"
+                style="@style/editLayout_standart_style">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/birthdate_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/alertText_standart_style"
+                app:layout_constraintTop_toBottomOf="@id/birthdate_edit_layout"
+                app:layout_constraintStart_toStartOf="@id/birthdate_edit_layout"
+                android:text="You must be over 18 years old"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/password_palette"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/birthdate_palette"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/password_pic"
+                style="@style/palettePic_standart_style"
+                app:layout_constraintTop_toTopOf="@id/password_edit_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/outline_lock_24"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_edit_layout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/password_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Password:"
+                style="@style/editLayout_standart_style">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordConfirm_edit_layout"
+                style="@style/editLayout_standart_style"
+                app:layout_constraintTop_toBottomOf="@id/password_edit_layout"
+                app:layout_constraintStart_toEndOf="@+id/password_pic"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Password confirmation:"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordConfirm_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/alertText_standart_style"
+                app:layout_constraintTop_toBottomOf="@id/passwordConfirm_edit_layout"
+                app:layout_constraintStart_toStartOf="@id/passwordConfirm_edit_layout"
+                android:text="Passwords in these fields must match"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottom_button_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_rowWeight="1"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="8dp"
+        app:cardElevation="18dp"
+        app:cardBackgroundColor="@color/light_contrast_color"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/standart_margin"
+                android:layout_marginVertical="@dimen/standart_margin"
+                android:text="@string/registration_button_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_buttonBar"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/standart_margin"
+        android:layout_marginVertical="@dimen/standart_margin"
+        android:text="@string/registration_button_label"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

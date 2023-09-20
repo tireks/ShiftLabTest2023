@@ -3,6 +3,17 @@
     <style name="Base.Theme.ShiftLabTest2023" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/light_primary_color</item>
+        <item name="colorPrimarySurface">@color/light_contrast_color</item>
+        <item name="colorAccent">@color/light_accent_color</item>
+        <item name="android:textColorPrimary">@color/light_primary_text_color</item>
+        <item name="android:textColorSecondary">@color/light_secondary_text_color</item>
+
+    </style>
+
+    <style name="Theme.ShiftLabTest2023.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.ShiftLabTest2023" parent="Base.Theme.ShiftLabTest2023" />
