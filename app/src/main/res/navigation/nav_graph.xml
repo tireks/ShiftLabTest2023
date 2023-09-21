@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registrationScreenFragment"
-        android:name="com.example.shiftlabtest2023.screen.RegistrationScreenFragment"
+        android:name="com.example.shiftlabtest2023.screen.RegistrationFragment"
         android:label="fragment_registration_screen"
-        tools:layout="@layout/fragment_registration_screen" />
+        tools:layout="@layout/fragment_registration" />
 </navigation>
