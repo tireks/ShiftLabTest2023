@@ -13,6 +13,11 @@ import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import com.example.shiftlabtest2023.utils.AppTextWatcher
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.TimeZone
 
 
 class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
@@ -47,6 +52,8 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
 
     private fun showForm() {
         with (binding){
+            registrationButton.setOnClickListener{handleButtonClick()}
+            birthdateEditText.setOnClickListener{handleDatePick(birthdateEditText)}
 
             nameEditText.addTextChangedListener(AppTextWatcher {
                 checkState(
@@ -79,6 +86,26 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
                 )
             })
         }
+    }
+
+    private fun handleDatePick(birthdateEditText: TextInputEditText) {
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .build()
+        datePicker.show(parentFragmentManager, "tag")
+        datePicker.addOnPositiveButtonClickListener {
+            val utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            utc.timeInMillis = it
+            val format = SimpleDateFormat("dd.MM.yyyy")
+            birthdateEditText.setText (format.format(utc.time))
+        }
+    }
+
+    private fun handleButtonClick() {
+        /*lifecycleScope.launch {
+
+        }*/
     }
 
     private fun checkState(enum: AppTextFieldEnums, content: String) {

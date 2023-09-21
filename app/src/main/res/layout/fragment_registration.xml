@@ -130,6 +130,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/birthdate_pic"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:focusable="false"
                 android:hint="Birthdate:"
                 style="@style/editLayout_standart_style">
 
@@ -137,6 +138,8 @@
                     android:id="@+id/birthdate_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="datetime"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
