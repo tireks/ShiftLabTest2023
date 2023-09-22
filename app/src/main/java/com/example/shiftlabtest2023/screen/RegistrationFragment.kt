@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shiftlabtest2023.databinding.FragmentRegistrationBinding
@@ -13,8 +14,10 @@ import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import com.example.shiftlabtest2023.utils.AppTextWatcher
+import com.example.shiftlabtest2023.utils.showToast
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.TimeZone
@@ -103,9 +106,43 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     }
 
     private fun handleButtonClick() {
-        /*lifecycleScope.launch {
+        lifecycleScope.launch {
+            val validationResult = viewModel.validateData(packData())
+            handleErrors(validationResult)
+        }
 
-        }*/
+    }
+
+    private fun handleErrors(result: MutableList<AppTextFieldEnums>) {
+        var tempString = ""
+        if (result.isEmpty()){
+            //next screen
+            showToast("emptyList")
+            return
+        }
+        for (i in result.indices){
+            tempString += result[i].name
+            tempString += " / "
+        }
+        showToast("errors:" + tempString)
+
+    }
+
+    private fun packData(): MutableList<AppTextFieldEnums> {
+        val tempList = mutableListOf<AppTextFieldEnums>()
+        with(binding){
+            AppTextFieldEnums.Name.content = nameEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Name)
+            AppTextFieldEnums.Surname.content = surnameEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Surname)
+            AppTextFieldEnums.Birthdate.content = birthdateEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Birthdate)
+            AppTextFieldEnums.Password.content = passwordEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Password)
+            AppTextFieldEnums.PasswordConf.content = passwordConfirmEditText.text.toString()
+            tempList.add(AppTextFieldEnums.PasswordConf)
+        }
+        return tempList
     }
 
     private fun checkState(enum: AppTextFieldEnums, content: String) {
