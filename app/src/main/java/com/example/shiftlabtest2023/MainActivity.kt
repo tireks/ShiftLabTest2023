@@ -17,4 +17,14 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
     }
+
+    //TODO refactor
+
+    //TODO add digits restriction in name
+
+    //TODO set types for edittexts
+
+    //TODO make fonts larger
+
+    //TODO string resourses
 }

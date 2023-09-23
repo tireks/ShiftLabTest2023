@@ -6,15 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.shiftlabtest2023.R
 import com.example.shiftlabtest2023.databinding.FragmentRegistrationBinding
 import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import com.example.shiftlabtest2023.utils.AppTextWatcher
+import com.example.shiftlabtest2023.utils.showToast
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.TimeZone
@@ -103,9 +108,65 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     }
 
     private fun handleButtonClick() {
-        /*lifecycleScope.launch {
+        hideAlerts()
+        lifecycleScope.launch {
+            val validationResult = viewModel.validateData(packData())
+            handleErrors(validationResult)
+        }
 
-        }*/
+    }
+
+    private fun hideAlerts() {
+        binding.nameAlert.isVisible = false
+        binding.passwordAlert.isVisible = false
+        binding.birthdayAlert.isVisible = false
+    }
+
+    private fun handleErrors(result: MutableList<AppTextFieldEnums>) {
+        var tempString = "Errors in fields:"
+        if (result.isEmpty()){
+            //next screen
+            return
+        }
+        for (i in result.indices){
+            tempString += result[i].name
+            tempString += ","
+            when(result[i]){
+                AppTextFieldEnums.Name ->{
+                    binding.nameAlert.isVisible = true
+                }
+                AppTextFieldEnums.Surname -> {
+                    binding.nameAlert.isVisible = true
+                }
+                AppTextFieldEnums.Birthdate -> {
+                    binding.birthdayAlert.isVisible = true
+                }
+                AppTextFieldEnums.Password , AppTextFieldEnums.PasswordConf -> {
+                    binding.passwordAlert.isVisible = true
+                }
+            }
+        }
+        Snackbar.make(binding.registrationButton, tempString, Snackbar.LENGTH_LONG)
+            .setAnchorView(binding.bottomButtonCard)
+            .setAction(getString(R.string.registration_snackbar_action)){  }
+            .show()
+    }
+
+    private fun packData(): MutableList<AppTextFieldEnums> {
+        val tempList = mutableListOf<AppTextFieldEnums>()
+        with(binding){
+            AppTextFieldEnums.Name.content = nameEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Name)
+            AppTextFieldEnums.Surname.content = surnameEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Surname)
+            AppTextFieldEnums.Birthdate.content = birthdateEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Birthdate)
+            AppTextFieldEnums.Password.content = passwordEditText.text.toString()
+            tempList.add(AppTextFieldEnums.Password)
+            AppTextFieldEnums.PasswordConf.content = passwordConfirmEditText.text.toString()
+            tempList.add(AppTextFieldEnums.PasswordConf)
+        }
+        return tempList
     }
 
     private fun checkState(enum: AppTextFieldEnums, content: String) {
