@@ -25,4 +25,6 @@ class MainActivity : AppCompatActivity() {
     //TODO set types for edittexts
 
     //TODO make fonts larger
+
+    //TODO string resourses
 }

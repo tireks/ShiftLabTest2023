@@ -144,6 +144,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/birthday_alert"
                 style="@style/alertText_standart_style"
                 app:layout_constraintTop_toBottomOf="@id/birthdate_edit_layout"
                 app:layout_constraintStart_toStartOf="@id/birthdate_edit_layout"
@@ -200,6 +201,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/password_alert"
                 style="@style/alertText_standart_style"
                 app:layout_constraintTop_toBottomOf="@id/passwordConfirm_edit_layout"
                 app:layout_constraintStart_toStartOf="@id/passwordConfirm_edit_layout"
