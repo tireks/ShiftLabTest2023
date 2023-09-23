@@ -15,6 +15,7 @@ import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import com.example.shiftlabtest2023.utils.AppTextWatcher
+import com.example.shiftlabtest2023.utils.mainActivity
 import com.example.shiftlabtest2023.utils.showToast
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -45,6 +46,7 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.state.observe(viewLifecycleOwner, ::handleState)
+        mainActivity.setSupportActionBar(binding.mainToolbar)
         showForm()
     }
 
