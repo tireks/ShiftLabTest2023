@@ -9,5 +9,14 @@
         android:id="@+id/registrationScreenFragment"
         android:name="com.example.shiftlabtest2023.screen.RegistrationFragment"
         android:label="fragment_registration_screen"
-        tools:layout="@layout/fragment_registration" />
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationScreenFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.shiftlabtest2023.screen.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
 </navigation>

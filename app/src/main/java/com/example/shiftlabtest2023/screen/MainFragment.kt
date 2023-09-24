@@ -28,7 +28,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
     }
 
     private fun performAccountRemoval() {
-        
+
     }
 
     private fun setupMenu() {

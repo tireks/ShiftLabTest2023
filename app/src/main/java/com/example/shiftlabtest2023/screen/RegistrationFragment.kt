@@ -127,7 +127,7 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     private fun handleErrors(result: MutableList<AppTextFieldEnums>) {
         var tempString = "Errors in fields:"
         if (result.isEmpty()){
-            //next screen
+            mainActivity.openAccount()
             return
         }
         for (i in result.indices){

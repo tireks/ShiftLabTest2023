@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import com.example.shiftlabtest2023.databinding.ActivityMainBinding
+import com.example.shiftlabtest2023.screen.RegistrationFragment
+import com.example.shiftlabtest2023.screen.RegistrationFragmentDirections
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -16,6 +18,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
+    }
+
+    fun openAccount(){
+        val action = RegistrationFragmentDirections.actionRegistrationScreenFragmentToMainFragment()
+        navController.navigate(action)
     }
 
     //TODO refactor
