@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp()
     }
 
-    fun openAccount(){
-        val action = RegistrationFragmentDirections.actionRegistrationScreenFragmentToMainFragment()
+    fun openAccount(nameData : String){
+        val action = RegistrationFragmentDirections.actionRegistrationScreenFragmentToMainFragment(nameData)
         navController.navigate(action)
     }
 
