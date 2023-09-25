@@ -58,6 +58,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
     private fun showContent() {
         binding.mainContentContainer.isVisible = true
         binding.accButton.setOnClickListener { showPopUp() }
+        mainActivity.setSupportActionBar(binding.mainToolbar)
+        setupMenu()
     }
 
     private fun showPopUp() {
@@ -65,12 +67,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
             .setTitle("Info")
             .setMessage(args.nameData)
             .show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mainActivity.setSupportActionBar(binding.mainToolbar)
-        setupMenu()
     }
 
     private fun performAccountRemoval() {

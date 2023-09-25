@@ -31,7 +31,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Registration:"
+            android:text="@string/registration_header"
             android:textSize="32sp"
             android:textStyle="bold|italic"
             tools:layout_editor_absoluteX="16dp"
@@ -73,14 +73,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/name_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Name:"
+                android:hint="@string/registration_name_hint"
                 style="@style/editLayout_standart_style">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/name_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    />
+                    android:inputType="text|textPersonName"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -89,14 +90,15 @@
                 app:layout_constraintTop_toBottomOf="@id/name_edit_layout"
                 app:layout_constraintStart_toEndOf="@+id/name_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Surname:"
+                android:hint="@string/registration_surname_hint"
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/surname_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    />
+                    android:inputType="text|textPersonName"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -104,7 +106,7 @@
                 app:layout_constraintTop_toBottomOf="@id/surname_edit_layout"
                 app:layout_constraintStart_toStartOf="@id/surname_edit_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="Name and Surname must contain \nonly more then two letters"
+                android:text="@string/registration_name_alert"
                 style="@style/alertText_standart_style" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -131,7 +133,8 @@
                 app:layout_constraintStart_toEndOf="@+id/birthdate_pic"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:focusable="false"
-                android:hint="Birthdate:"
+                android:hint="@string/registration_birthdate_hint"
+                app:endIconMode="clear_text"
                 style="@style/editLayout_standart_style">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -139,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:inputType="datetime"
+                    android:inputType="datetime|date"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,7 +151,7 @@
                 style="@style/alertText_standart_style"
                 app:layout_constraintTop_toBottomOf="@id/birthdate_edit_layout"
                 app:layout_constraintStart_toStartOf="@id/birthdate_edit_layout"
-                android:text="You must be over 18 years old"
+                android:text="@string/registration_birthdate_alert"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -174,13 +177,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/password_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Password:"
+                android:hint="@string/registration_password_hint"
+                app:endIconMode="password_toggle"
                 style="@style/editLayout_standart_style">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPassword"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -190,14 +195,16 @@
                 app:layout_constraintTop_toBottomOf="@id/password_edit_layout"
                 app:layout_constraintStart_toEndOf="@+id/password_pic"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Password confirmation:"
+                app:endIconMode="password_toggle"
+                android:hint="@string/registration_passwordConf_hint"
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordConfirm_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    />
+                    android:inputType="textPassword"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -205,7 +212,7 @@
                 style="@style/alertText_standart_style"
                 app:layout_constraintTop_toBottomOf="@id/passwordConfirm_edit_layout"
                 app:layout_constraintStart_toStartOf="@id/passwordConfirm_edit_layout"
-                android:text="Passwords in these fields must match"
+                android:text="@string/registration_password_alert"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -276,7 +283,7 @@
                 app:layout_constraintEnd_toEndOf="@id/registration_button"
                 app:layout_constraintStart_toStartOf="@id/registration_button"
                 android:layout_marginTop="@dimen/standart_small_margin"
-                android:text="\*Button locked, please fill all fields"
+                android:text="@string/registration_button_tooltip"
                 android:visibility="gone"
                 />
 

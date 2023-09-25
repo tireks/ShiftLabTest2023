@@ -25,13 +25,10 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(action)
     }
 
+    //TODO make upgrades on textfields (clear on date, visibility on password)
+
+    //TODO spit some comments on argueable things
+
     //TODO refactor
 
-    //TODO add digits restriction in name
-
-    //TODO set types for edittexts
-
-    //TODO make fonts larger
-
-    //TODO string resourses
 }

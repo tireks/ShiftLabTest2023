@@ -30,7 +30,7 @@ class RegistrationViewModel () : ViewModel(){
         when(enum){
             AppTextFieldEnums.Name,  AppTextFieldEnums.Surname-> {
                 var tempString = enum.content
-                if (enum.content.length <= 2){
+                if (enum.content.length <= 2 || enum.content.contains(Regex("[0-9]"))){
                     return false
                 }
                 return true
