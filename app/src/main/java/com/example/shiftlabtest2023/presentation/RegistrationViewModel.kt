@@ -5,15 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shiftlabtest2023.domain.entity.User
 import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
 import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
@@ -37,23 +33,21 @@ class RegistrationViewModel (
 
     fun askForSavedUser(){
         viewModelScope.launch{
-            /*try {
+            try {
                 val tmp = getSavedUserUseCase()
-                Log.d("save",tmp.name)
                 if (tmp.name.isEmpty() && tmp.surname.isEmpty()){
                     _state.value = RegistrationState.InitializeContent
                 } else {
                     _state.value = RegistrationState.SkipScreen
+                    //делать стейт для перехода на другой экран - не очень хорошо,
+                    //знаю, просто слишком поздно понял, как хранение имени в датасторе реализовать в рамках
+                    //clean architecture, не успел все нормально до конца сделать
                 }
             } catch (e: Exception){
                 Log.d("save","exception")
-            }*/
-            val tmp = getSavedUserUseCase()
-            Log.d("save",tmp.name)
-            if (tmp.name.isEmpty() && tmp.surname.isEmpty()){
-                _state.value = RegistrationState.InitializeContent
-            } else {
-                _state.value = RegistrationState.SkipScreen
+                //здесь должна быть нормальная работа с ошибкой,
+                // дополнительный стейт вьюмодели для вывода
+                // и прочее
             }
         }
     }
@@ -90,9 +84,9 @@ class RegistrationViewModel (
     }
 
     private fun isBirthdateValid(stringDate: String) : Boolean{
-        fun monther(monthInt : Int) : String{
+        fun monthWorker(monthInt : Int) : String{
             if (monthInt < 10) {
-                return "0" + monthInt.toString()
+                return "0$monthInt"
             }
             return monthInt.toString()
         }
@@ -105,7 +99,7 @@ class RegistrationViewModel (
         val todayDate = LocalDate.now()
         val desiredYear = todayDate.year - 18
         val desiredDate = LocalDate.parse(
-            todayDate.dayOfMonth.toString() + "-" + monther(todayDate.month.value)  + "-" + desiredYear.toString(),
+            todayDate.dayOfMonth.toString() + "-" + monthWorker(todayDate.month.value)  + "-" + desiredYear.toString(),
             DateTimeFormatter
                 .ofPattern("dd-MM-uuuu")
                 .withResolverStyle(ResolverStyle.STRICT)
@@ -119,7 +113,7 @@ class RegistrationViewModel (
     suspend fun validateData(data : MutableList<AppTextFieldEnums>) : MutableList<AppTextFieldEnums>{
         password = ""
         passwordConf = ""
-        val returnalData = viewModelScope.async {
+        return viewModelScope.async {
             val tempList = mutableListOf<AppTextFieldEnums>()
             data.forEach {
                 if (!isValidData(it)) {
@@ -127,9 +121,7 @@ class RegistrationViewModel (
                 }
             }
             return@async tempList
-        }
-
-        return returnalData.await()
+        }.await()
     }
 
     fun checkState(enum: AppTextFieldEnums){
@@ -158,6 +150,7 @@ class RegistrationViewModel (
         viewModelScope.launch {
             saveUserUseCase(name, surname)
         }
+        //тут надо было в трай-кэчи обернуть
     }
 
     private fun unlockState() {

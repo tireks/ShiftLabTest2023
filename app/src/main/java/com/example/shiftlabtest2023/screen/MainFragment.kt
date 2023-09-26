@@ -87,7 +87,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
 
     private fun performAccountRemoval() {
         viewModel.deleteAccount()
-        //findNavController().popBackStack(R.id.registrationScreenFragment, true)
+        // в этом месте должно быть что-то для адекватного возвращения на предыдущий фрагмент,
+        // обязательно синхронизовать с потоком в котором происходит запись в датастор
     }
 
     private fun setupMenu() {

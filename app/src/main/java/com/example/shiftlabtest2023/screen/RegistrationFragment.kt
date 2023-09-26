@@ -109,6 +109,7 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
             })
             bottomButtonCard.isVisible = false
             viewModel.getButton()
+            //тут надо было как-нибудь по-красивше сделать, не успел отрефакторить
         }
     }
 

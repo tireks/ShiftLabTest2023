@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.map
 const val nameDataStore = "USER"
 
 val Context.datastore : DataStore<Preferences> by preferencesDataStore(name = nameDataStore)
+//можно было использовать бд, типа room или еще что-то, но решил что тут простые данные
+//думаю, простого датастора хватит, к тому-же впервые с ним поработал, опыт =))
 
 class UserRepositoryImpl(private val context: Context) : UserRepository {
 
@@ -31,6 +33,8 @@ class UserRepositoryImpl(private val context: Context) : UserRepository {
             surname = user[surnameUser] ?: ""
         )
     }.first()
+    //тут стоило без first() просто Flow<User> выводить, но пока только так получилось реализовать
+    // применение юзкейса во вьюмодели
 
     override suspend fun saveUser(name: String, surname: String) {
         context.datastore.edit { user->
