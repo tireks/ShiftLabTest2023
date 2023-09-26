@@ -1,9 +1,12 @@
 package com.example.shiftlabtest2023.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
+import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -11,9 +14,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
-class RegistrationViewModel () : ViewModel(){
+class RegistrationViewModel (
+    private val getSavedUserUseCase: GetSavedUserUseCase,
+    private val saveUserUseCase: SaveUserUseCase
+) : ViewModel(){
 
-    private val _state: MutableLiveData<RegistrationState> = MutableLiveData(RegistrationState.Locked)
+    private val _state: MutableLiveData<RegistrationState> = MutableLiveData(RegistrationState.InitializeScreen)
     val state: LiveData<RegistrationState> = _state
     private val emptyFieldsList = mutableListOf<AppTextFieldEnums>(
         AppTextFieldEnums.Name,
@@ -25,12 +31,33 @@ class RegistrationViewModel () : ViewModel(){
     private var password = ""
     private var passwordConf = ""
 
+    fun askForSavedUser(){
+        viewModelScope.launch{
+            try {
+                val tmp = getSavedUserUseCase()
+                if (tmp.name.isEmpty() && tmp.surname.isEmpty()){
+                    _state.value = RegistrationState.InitializeContent
+                } else {
+                    _state.value = RegistrationState.SkipScreen
+                    //делать стейт для перехода на другой экран - не очень хорошо,
+                    //знаю, просто слишком поздно понял, как хранение имени в датасторе реализовать в рамках
+                    //clean architecture, не успел все нормально до конца сделать
+                }
+            } catch (e: Exception){
+                Log.d("save","exception")
+                //здесь должна быть нормальная работа с ошибкой,
+                // дополнительный стейт вьюмодели для вывода
+                // и прочее
+            }
+        }
+    }
+
     private fun isValidData(enum: AppTextFieldEnums): Boolean {
         var passwordString = ""
         when(enum){
             AppTextFieldEnums.Name,  AppTextFieldEnums.Surname-> {
                 var tempString = enum.content
-                if (enum.content.length <= 2){
+                if (enum.content.length <= 2 || enum.content.contains(Regex("[0-9]"))){
                     return false
                 }
                 return true
@@ -57,9 +84,9 @@ class RegistrationViewModel () : ViewModel(){
     }
 
     private fun isBirthdateValid(stringDate: String) : Boolean{
-        fun monther(monthInt : Int) : String{
+        fun monthWorker(monthInt : Int) : String{
             if (monthInt < 10) {
-                return "0" + monthInt.toString()
+                return "0$monthInt"
             }
             return monthInt.toString()
         }
@@ -72,7 +99,7 @@ class RegistrationViewModel () : ViewModel(){
         val todayDate = LocalDate.now()
         val desiredYear = todayDate.year - 18
         val desiredDate = LocalDate.parse(
-            todayDate.dayOfMonth.toString() + "-" + monther(todayDate.month.value)  + "-" + desiredYear.toString(),
+            todayDate.dayOfMonth.toString() + "-" + monthWorker(todayDate.month.value)  + "-" + desiredYear.toString(),
             DateTimeFormatter
                 .ofPattern("dd-MM-uuuu")
                 .withResolverStyle(ResolverStyle.STRICT)
@@ -86,20 +113,15 @@ class RegistrationViewModel () : ViewModel(){
     suspend fun validateData(data : MutableList<AppTextFieldEnums>) : MutableList<AppTextFieldEnums>{
         password = ""
         passwordConf = ""
-        val returnalData = viewModelScope.async {
+        return viewModelScope.async {
             val tempList = mutableListOf<AppTextFieldEnums>()
             data.forEach {
                 if (!isValidData(it)) {
                     tempList.add(it)
                 }
             }
-            /*for (i in data.indices){
-
-            }*/
             return@async tempList
-        }
-
-        return returnalData.await()
+        }.await()
     }
 
     fun checkState(enum: AppTextFieldEnums){
@@ -118,6 +140,17 @@ class RegistrationViewModel () : ViewModel(){
                 unlockState()
             }
         }
+    }
+
+    fun getButton(){
+        _state.value = RegistrationState.Unlocked
+    }
+
+    fun saveName(name : String, surname : String){
+        viewModelScope.launch {
+            saveUserUseCase(name, surname)
+        }
+        //тут надо было в трай-кэчи обернуть
     }
 
     private fun unlockState() {

@@ -11,10 +11,13 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shiftlabtest2023.R
 import com.example.shiftlabtest2023.databinding.FragmentRegistrationBinding
+import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
+import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
 import com.example.shiftlabtest2023.utils.AppTextWatcher
+import com.example.shiftlabtest2023.utils.mainActivity
 import com.example.shiftlabtest2023.utils.showToast
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -37,7 +40,8 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     private val viewModel: RegistrationViewModel by viewModels {
         viewModelFactory {
             initializer {
-                RegistrationViewModel()
+                RegistrationViewModel(GetSavedUserUseCase(mainActivity.repository),
+                    SaveUserUseCase(mainActivity.repository))
             }
         }
     }
@@ -45,18 +49,31 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.state.observe(viewLifecycleOwner, ::handleState)
-        showForm()
+        mainActivity.setSupportActionBar(binding.mainToolbar)
+        //showForm()
     }
 
     private fun handleState(state: RegistrationState) {
         when (state){
             is RegistrationState.Unlocked -> unlockRegistration()
             is RegistrationState.Locked -> lockRegistration()
+            is RegistrationState.SkipScreen -> mainActivity.openAccount("")
+            is RegistrationState.InitializeScreen -> initializeScreen()
+            is RegistrationState.InitializeContent -> showForm()
         }
+    }
+
+    private fun initializeScreen() {
+        binding.registrationContainer.isVisible = false
+        binding.progressBar.isVisible = true
+        viewModel.askForSavedUser()
     }
 
     private fun showForm() {
         with (binding){
+            progressBar.isVisible = false
+            registrationContainer.isVisible = true
+
             registrationButton.setOnClickListener{handleButtonClick()}
             birthdateEditText.setOnClickListener{handleDatePick(birthdateEditText)}
 
@@ -90,6 +107,9 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
                     passwordConfirmEditText.text.toString()
                 )
             })
+            bottomButtonCard.isVisible = false
+            viewModel.getButton()
+            //тут надо было как-нибудь по-красивше сделать, не успел отрефакторить
         }
     }
 
@@ -125,7 +145,9 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     private fun handleErrors(result: MutableList<AppTextFieldEnums>) {
         var tempString = "Errors in fields:"
         if (result.isEmpty()){
-            //next screen
+            viewModel.saveName(binding.nameEditText.text.toString(), binding.surnameEditText.text.toString())
+            val name = binding.nameEditText.text.toString() + " " + binding.surnameEditText.text.toString()
+            mainActivity.openAccount(name)
             return
         }
         for (i in result.indices){
@@ -175,11 +197,13 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     }
 
     private fun lockRegistration() {
+        binding.bottomButtonCard.isVisible = true
         binding.registrationButton.isEnabled = false
         binding.registrationButtonTooltip.isVisible = true
     }
 
     private fun unlockRegistration() {
+        binding.bottomButtonCard.isVisible = true
         binding.registrationButton.isEnabled = true
         binding.registrationButtonTooltip.isVisible = false
     }
