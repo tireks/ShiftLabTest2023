@@ -13,7 +13,7 @@ import java.time.format.ResolverStyle
 
 class RegistrationViewModel () : ViewModel(){
 
-    private val _state: MutableLiveData<RegistrationState> = MutableLiveData(RegistrationState.Locked)
+    private val _state: MutableLiveData<RegistrationState> = MutableLiveData(RegistrationState.InitializeScreen)
     val state: LiveData<RegistrationState> = _state
     private val emptyFieldsList = mutableListOf<AppTextFieldEnums>(
         AppTextFieldEnums.Name,
@@ -24,6 +24,10 @@ class RegistrationViewModel () : ViewModel(){
     )
     private var password = ""
     private var passwordConf = ""
+
+    fun askForSavedUser(){
+        _state.value = RegistrationState.InitializeContent
+    }
 
     private fun isValidData(enum: AppTextFieldEnums): Boolean {
         var passwordString = ""
@@ -93,9 +97,6 @@ class RegistrationViewModel () : ViewModel(){
                     tempList.add(it)
                 }
             }
-            /*for (i in data.indices){
-
-            }*/
             return@async tempList
         }
 
@@ -118,6 +119,10 @@ class RegistrationViewModel () : ViewModel(){
                 unlockState()
             }
         }
+    }
+
+    fun getButton(){
+        _state.value = RegistrationState.Unlocked
     }
 
     private fun unlockState() {

@@ -47,18 +47,30 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.state.observe(viewLifecycleOwner, ::handleState)
         mainActivity.setSupportActionBar(binding.mainToolbar)
-        showForm()
+        //showForm()
     }
 
     private fun handleState(state: RegistrationState) {
         when (state){
             is RegistrationState.Unlocked -> unlockRegistration()
             is RegistrationState.Locked -> lockRegistration()
+            is RegistrationState.SkipScreen -> mainActivity.openAccount("")
+            is RegistrationState.InitializeScreen -> initializeScreen()
+            is RegistrationState.InitializeContent -> showForm()
         }
+    }
+
+    private fun initializeScreen() {
+        binding.registrationContainer.isVisible = false
+        binding.progressBar.isVisible = true
+        viewModel.askForSavedUser()
     }
 
     private fun showForm() {
         with (binding){
+            progressBar.isVisible = false
+            registrationContainer.isVisible = true
+
             registrationButton.setOnClickListener{handleButtonClick()}
             birthdateEditText.setOnClickListener{handleDatePick(birthdateEditText)}
 
@@ -92,6 +104,8 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
                     passwordConfirmEditText.text.toString()
                 )
             })
+            bottomButtonCard.isVisible = false
+            viewModel.getButton()
         }
     }
 
@@ -178,11 +192,13 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     }
 
     private fun lockRegistration() {
+        binding.bottomButtonCard.isVisible = true
         binding.registrationButton.isEnabled = false
         binding.registrationButtonTooltip.isVisible = true
     }
 
     private fun unlockRegistration() {
+        binding.bottomButtonCard.isVisible = true
         binding.registrationButton.isEnabled = true
         binding.registrationButtonTooltip.isVisible = false
     }
