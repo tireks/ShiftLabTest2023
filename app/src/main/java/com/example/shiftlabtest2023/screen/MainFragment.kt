@@ -13,14 +13,20 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.shiftlabtest2023.R
 import com.example.shiftlabtest2023.databinding.FragmentMainBinding
+import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
+import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.presentation.MainState
 import com.example.shiftlabtest2023.presentation.MainViewModel
 import com.example.shiftlabtest2023.utils.mainActivity
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainFragment : BaseFragment<FragmentMainBinding>(){
 
@@ -34,7 +40,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
     private val viewModel: MainViewModel by viewModels {
         viewModelFactory {
             initializer {
-                MainViewModel()
+                MainViewModel(SaveUserUseCase(mainActivity.repository),
+                    GetSavedUserUseCase(mainActivity.repository))
             }
         }
     }
@@ -50,27 +57,37 @@ class MainFragment : BaseFragment<FragmentMainBinding>(){
         when(state){
             MainState.ShowContent -> {
                 showContent()
-
             }
         }
     }
 
     private fun showContent() {
         binding.mainContentContainer.isVisible = true
-        binding.accButton.setOnClickListener { showPopUp() }
+        binding.accButton.setOnClickListener { lifecycleScope.launch { showPopUp() } }
         mainActivity.setSupportActionBar(binding.mainToolbar)
         setupMenu()
     }
 
-    private fun showPopUp() {
-        AlertDialog.Builder(context)
-            .setTitle("Info")
-            .setMessage(args.nameData)
+    private suspend fun showPopUp() { //делать попап в отдельном потоке не лучшая идея,
+        AlertDialog.Builder(context)  // но я не успеваю справится с тем ,что поток вывода датастора и UI поток
+            .setTitle("Info")         // никак не совмещаются
+            .setMessage(nameProvider())
             .show()
     }
 
-    private fun performAccountRemoval() {
+    private suspend fun nameProvider(): String {
+        return lifecycleScope.async {
+            if (args.nameData.isEmpty()){
+                return@async viewModel.getName()
+            } else {
+                return@async args.nameData
+            }
+        }.await()
+    }
 
+    private fun performAccountRemoval() {
+        viewModel.deleteAccount()
+        //findNavController().popBackStack(R.id.registrationScreenFragment, true)
     }
 
     private fun setupMenu() {

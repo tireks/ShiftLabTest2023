@@ -9,6 +9,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.shiftlabtest2023.domain.entity.User
 import com.example.shiftlabtest2023.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 
@@ -26,10 +27,10 @@ class UserRepositoryImpl(private val context: Context) : UserRepository {
 
     override suspend fun getSavedUser() = context.datastore.data.map { user ->
         User(
-            name = user[nameUser]!!,
-            surname = user[surnameUser]!!
+            name = user[nameUser] ?: "",
+            surname = user[surnameUser] ?: ""
         )
-    }
+    }.first()
 
     override suspend fun saveUser(name: String, surname: String) {
         context.datastore.edit { user->

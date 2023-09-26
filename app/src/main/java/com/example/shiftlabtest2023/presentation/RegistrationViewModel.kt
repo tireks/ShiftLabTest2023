@@ -1,17 +1,27 @@
 package com.example.shiftlabtest2023.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shiftlabtest2023.domain.entity.User
+import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
+import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
-class RegistrationViewModel () : ViewModel(){
+class RegistrationViewModel (
+    private val getSavedUserUseCase: GetSavedUserUseCase,
+    private val saveUserUseCase: SaveUserUseCase
+) : ViewModel(){
 
     private val _state: MutableLiveData<RegistrationState> = MutableLiveData(RegistrationState.InitializeScreen)
     val state: LiveData<RegistrationState> = _state
@@ -26,7 +36,26 @@ class RegistrationViewModel () : ViewModel(){
     private var passwordConf = ""
 
     fun askForSavedUser(){
-        _state.value = RegistrationState.InitializeContent
+        viewModelScope.launch{
+            /*try {
+                val tmp = getSavedUserUseCase()
+                Log.d("save",tmp.name)
+                if (tmp.name.isEmpty() && tmp.surname.isEmpty()){
+                    _state.value = RegistrationState.InitializeContent
+                } else {
+                    _state.value = RegistrationState.SkipScreen
+                }
+            } catch (e: Exception){
+                Log.d("save","exception")
+            }*/
+            val tmp = getSavedUserUseCase()
+            Log.d("save",tmp.name)
+            if (tmp.name.isEmpty() && tmp.surname.isEmpty()){
+                _state.value = RegistrationState.InitializeContent
+            } else {
+                _state.value = RegistrationState.SkipScreen
+            }
+        }
     }
 
     private fun isValidData(enum: AppTextFieldEnums): Boolean {
@@ -123,6 +152,12 @@ class RegistrationViewModel () : ViewModel(){
 
     fun getButton(){
         _state.value = RegistrationState.Unlocked
+    }
+
+    fun saveName(name : String, surname : String){
+        viewModelScope.launch {
+            saveUserUseCase(name, surname)
+        }
     }
 
     private fun unlockState() {

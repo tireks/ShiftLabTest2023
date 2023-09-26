@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun getSavedUser() : Flow<User>
+    suspend fun getSavedUser() : User
 
     suspend fun saveUser(name: String, surname: String)
 }

@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class GetSavedUserUseCase (
     private val repository: UserRepository
 ){
-    suspend operator fun invoke() : Flow<User> =
+    suspend operator fun invoke() : User =
         repository.getSavedUser()
 }

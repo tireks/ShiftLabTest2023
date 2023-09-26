@@ -11,6 +11,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shiftlabtest2023.R
 import com.example.shiftlabtest2023.databinding.FragmentRegistrationBinding
+import com.example.shiftlabtest2023.domain.usecase.GetSavedUserUseCase
+import com.example.shiftlabtest2023.domain.usecase.SaveUserUseCase
 import com.example.shiftlabtest2023.presentation.RegistrationState
 import com.example.shiftlabtest2023.presentation.RegistrationViewModel
 import com.example.shiftlabtest2023.utils.AppTextFieldEnums
@@ -38,7 +40,8 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     private val viewModel: RegistrationViewModel by viewModels {
         viewModelFactory {
             initializer {
-                RegistrationViewModel()
+                RegistrationViewModel(GetSavedUserUseCase(mainActivity.repository),
+                    SaveUserUseCase(mainActivity.repository))
             }
         }
     }
@@ -141,6 +144,7 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding>() {
     private fun handleErrors(result: MutableList<AppTextFieldEnums>) {
         var tempString = "Errors in fields:"
         if (result.isEmpty()){
+            viewModel.saveName(binding.nameEditText.text.toString(), binding.surnameEditText.text.toString())
             val name = binding.nameEditText.text.toString() + " " + binding.surnameEditText.text.toString()
             mainActivity.openAccount(name)
             return
